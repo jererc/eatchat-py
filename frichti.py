@@ -7,6 +7,7 @@ from lxml import html
 import requests
 
 FROM_NAME = 'Frichti'
+BATCH_SIZE = 3
 
 
 def parse_cmdline():
@@ -45,7 +46,6 @@ def iter_hipchat_messages(data):
 
     tree = html.fromstring(data)
     batch = []
-    batch_size = 3
     for name, id_, color in [
             ('Entrees', 'entree', 'yellow'),
             ('Plats', 'plat', 'green'),
@@ -60,11 +60,10 @@ def iter_hipchat_messages(data):
             if not desc:
                 continue
             cell = '<td><img width=160 src="%s"><br><strong>%s</strong></td>' % (img_url, desc)
-            if len(batch) == batch_size:
+            batch.append(cell)
+            if len(batch) == BATCH_SIZE:
                 yield get_message(batch, color=color)
                 batch = []
-            else:
-                batch.append(cell)
 
         if batch:
             yield get_message(batch, color=color)
