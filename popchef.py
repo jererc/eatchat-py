@@ -101,6 +101,7 @@ def get_email_message(host, port, username, password,
         finally:
             if client:
                 client.close()
+                client = None
         sleep(30, 'no recent message from %s, retrying in a few seconds...' % from_email)
 
     raise Exception('no new message from %s' % from_email)
