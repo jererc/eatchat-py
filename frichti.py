@@ -31,7 +31,9 @@ def iter_hipchat_messages(data):
     def get_img_url(element):
         res = element.cssselect('div.product-grid-image--centered')
         if res:
-            return 'http://%s' % res[0].get('data-src').lstrip('/')
+            desc = res[0].get('data-src')
+            if desc:
+                return 'http://%s' % desc.lstrip('/')
 
     def get_description(element):
         res = el.cssselect('div.product-grid-content span')
