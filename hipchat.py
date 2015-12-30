@@ -1,3 +1,5 @@
+from urllib2 import quote
+
 import requests
 
 
@@ -17,7 +19,8 @@ class HipChatClient(object):
 
     def send_message(self, room, message, message_format='html',
             color='green', notify=True):
-        url = 'https://api.hipchat.com/v2/room/%s/notification' % room
+        room_ = quote(room.encode('utf-8'), '')
+        url = 'https://api.hipchat.com/v2/room/%s/notification' % room_
         data = {
             'message': message,
             'message_format': message_format,
