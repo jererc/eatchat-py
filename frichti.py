@@ -17,7 +17,7 @@ def parse_cmdline():
     parser.add_argument('--hipchat_token', type=str, required=True,
             help='hipchat API token')
     parser.add_argument('--hipchat_room', type=str, required=True,
-            help='hipchat room name')
+            help='hipchat room id or name')
     return parser.parse_args()
 
 def get_body(url):
@@ -75,10 +75,11 @@ def main():
     args = parse_cmdline()
     data = get_body(args.url)
     hc = HipChatClient(api_token=args.hipchat_token, from_name=FROM_NAME)
-    hc.send_message(args.hipchat_room, message=FROM_NAME, color='gray')
+    room_id = hc.get_room_id(args.hipchat_room)
+    hc.send_message(room_id, message=FROM_NAME, color='gray')
     for message in iter_hipchat_messages(data):
-        hc.send_message(args.hipchat_room, **message)
-    hc.send_message(args.hipchat_room,
+        hc.send_message(room_id, **message)
+    hc.send_message(room_id,
             message='<a href="%s">Order %s</a>' % (args.url, FROM_NAME), color='gray')
 
 

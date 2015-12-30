@@ -59,7 +59,7 @@ def parse_cmdline():
     parser.add_argument('--hipchat_token', type=str, required=True,
             help='hipchat API token')
     parser.add_argument('--hipchat_room', type=str, required=True,
-            help='hipchat room name')
+            help='hipchat room id or name')
     parser.add_argument('--imap_host', type=str, required=True,
             help='IMAP host')
     parser.add_argument('--imap_port', type=int, default=993,
@@ -124,10 +124,11 @@ def main():
             args.imap_username, args.imap_password, args.from_email,
             args.subject, args.timeout)
     hc = HipChatClient(api_token=args.hipchat_token, from_name=FROM_NAME)
-    hc.send_message(args.hipchat_room, message=FROM_NAME, color='gray')
+    room_id = hc.get_room_id(args.hipchat_room)
+    hc.send_message(room_id, message=FROM_NAME, color='gray')
     for message in get_hipchat_messages(email_message):
-        hc.send_message(args.hipchat_room, **message)
-    hc.send_message(args.hipchat_room,
+        hc.send_message(room_id, **message)
+    hc.send_message(room_id,
             message='<a href="%s">Order %s</a>' % (ORDER_URL, FROM_NAME), color='gray')
 
 
