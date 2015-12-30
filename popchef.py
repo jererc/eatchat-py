@@ -110,11 +110,13 @@ def get_hipchat_messages(message):
 
     def get_message(element):
         img_url = element.cssselect('img')[0].get('src')
-        desc = element.cssselect('td.mcnTextContent div span')[0].text.encode('utf-8')
-        return {'message': '<img width=240 src="%s"><br><strong>%s</strong>' % (img_url, desc)}
+        res = element.cssselect('td.mcnTextContent div strong')
+        if res:
+            desc = res[0].text.encode('utf-8')
+            return {'message': '<img width=240 src="%s"><br><strong>%s</strong>' % (img_url, desc)}
 
-    tree = html.fromstring(message)
-    return map(get_message, tree.cssselect('td.mcnImageCardBlockInner'))
+    elements = html.fromstring(message).cssselect('td.mcnImageCardBlockInner')
+    return [m for m in map(get_message, elements) if m]
 
 def main():
     args = parse_cmdline()
