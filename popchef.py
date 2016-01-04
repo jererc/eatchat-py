@@ -112,8 +112,8 @@ def get_hipchat_messages(message):
         img_url = element.cssselect('img')[0].get('src')
         res = element.cssselect('td.mcnTextContent div strong')
         if res:
-            desc = res[0].text.encode('utf-8')
-            return {'message': '<img width=240 src="%s"><br><strong>%s</strong>' % (img_url, desc)}
+            desc = html.tostring(res[0], encoding='utf-8')
+            return {'message': '<img width=240 src="%s"><br>%s' % (img_url, desc)}
 
     elements = html.fromstring(message).cssselect('td.mcnImageCardBlockInner')
     return [m for m in map(get_message, elements) if m]
